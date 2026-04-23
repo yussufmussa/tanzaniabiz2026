@@ -1,0 +1,83 @@
+/* Default styles for bottom menu bar */
+.bottom-menu {
+    display: none; /* Hide by default */
+}
+
+/* Media query for mobile devices */
+@media only screen and (max-width: 768px) {
+    .bottom-menu {
+        display: block; /* Display only on screens up to 768px width */
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background-color: #fff;
+        box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .bottom-menu ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: space-around;
+    }
+
+    .bottom-menu li {
+        flex: 1;
+        text-align: center;
+    }
+
+    .bottom-menu a {
+        display: block;
+        padding: 10px 0;
+        text-decoration: none;
+        color: #333;
+    }
+
+    .bottom-menu a i {
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    .bottom-menu a span {
+        display: block;
+        font-size: 12px;
+    }
+}
+    @media (max-width: 767px) {
+    #tops-button {
+        display: none;
+    }
+
+}
+
+/* password toggle */
+        .toggle-password-btn {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            color: #6c757d;
+            font-size: 1.1rem;
+            line-height: 1;
+        }
+
+        /* Push the label down so top: 50% centers on the input, not the whole form-group */
+        .form-group.position-relative .toggle-password-btn {
+            top: calc(50% + 12px);
+            /* adjust 12px based on your label height */
+        }
+
+        .form-group .form-control {
+            padding-right: 40px;
+            /* prevent text hiding behind the icon */
+        }
+
+
+
+

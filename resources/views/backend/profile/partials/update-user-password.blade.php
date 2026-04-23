@@ -1,0 +1,1 @@
+@livewire('backend.profile.update-profile-information')

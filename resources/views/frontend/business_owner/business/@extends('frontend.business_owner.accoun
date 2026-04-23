@@ -1,0 +1,193 @@
+@extends('frontend.business_owner.account.base')
+@section('title', 'Add Business Listing')
+@section('extra_style')
+<link href="{{asset('frontend/css/select2.min.css')}}" rel="stylesheet" />
+<style>
+    .custom-file-upload {
+        display: inline-block;
+        padding: 6px 12px;
+        cursor: pointer;
+        background-color: #dc3545;
+        border: 1px solid #dc3545;
+        border-radius: 4px;
+        color: #fff;
+    }
+
+    .custom-file-upload-new {
+        display: inline-block;
+        padding: 6px 12px;
+        cursor: pointer;
+        background-color: #198754;
+        border: 1px solid #198754;
+        border-radius: 4px;
+        color: #fff;
+    }
+
+    .custom-file-upload:hover {
+        background-color: #c82333;
+    }
+
+    .custom-file-upload:active {
+        background-color: #bd2130;
+    }
+
+    /* Tab Styles */
+    .nav-tabs {
+        border-bottom: 2px solid #dee2e6;
+        margin-bottom: 20px;
+    }
+
+    .nav-tabs .nav-link {
+        border: none;
+        color: #6c757d;
+        padding: 12px 24px;
+        font-weight: 500;
+        transition: all 0.3s;
+    }
+
+    .nav-tabs .nav-link:hover {
+        color: #495057;
+        border-color: transparent;
+    }
+
+    .nav-tabs .nav-link.active {
+        color: #dc3545;
+        background-color: transparent;
+        border-bottom: 3px solid #dc3545;
+    }
+
+    .nav-tabs .nav-link.completed {
+        color: #198754;
+    }
+
+    .nav-tabs .nav-link.completed i {
+        display: inline-block;
+        margin-left: 5px;
+    }
+
+    .tab-content {
+        padding: 20px 0;
+    }
+
+    .tab-navigation {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 30px;
+        padding-top: 20px;
+        border-top: 1px solid #dee2e6;
+    }
+
+    .tab-pane {
+        animation: fadeIn 0.3s;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .step-indicator {
+        display: inline-block;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        background-color: #6c757d;
+        color: white;
+        text-align: center;
+        line-height: 24px;
+        font-size: 12px;
+        margin-right: 8px;
+    }
+
+    .nav-link.active .step-indicator {
+        background-color: #dc3545;
+    }
+
+    .nav-link.completed .step-indicator {
+        background-color: #198754;
+    }
+</style>
+@endsection
+
+@section('contents')
+<div class="goodup-dashboard-content">
+
+    <div class="dashboard-widg-bar d-block">
+        <div class="row">
+            <div class="col-xl-12 col-lg-2 col-md-12 col-sm-12">
+                <div class="submit-form">
+                    <!-- Listing Info -->
+                    <div class="dashboard-list-wraps bg-white rounded mb-4">
+                        <div class="dashboard-list-wraps-head br-bottom py-3 px-3">
+                            <div class="dashboard-list-wraps-flx">
+                                <h4 class="mb-0 ft-medium fs-md"><i class="fa fa-file me-2 theme-cl fs-sm"></i>
+                                    {{ isset($listing) ? 'Edit Listing' : 'Add New Listing' }}
+                                </h4>
+                            </div>
+                        </div>
+
+                        <div class="dashboard-list-wraps-body py-3 px-3">
+
+                            <!-- Tab Navigation -->
+                            <ul class="nav nav-tabs" id="listingTabs" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link active" id="general-tab" data-bs-toggle="tab"
+                                        data-bs-target="#general" type="button">
+                                        <span class="step-indicator">1</span> General
+                                    </button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link {{ !isset($listing) ? 'disabled' : '' }}" id="photos-tab"
+                                        data-bs-toggle="tab" data-bs-target="#photos" type="button">
+                                        <span class="step-indicator">2</span> Business Photos
+                                    </button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link {{ !isset($listing) ? 'disabled' : '' }}" id="products-tab"
+                                        data-bs-toggle="tab" data-bs-target="#products" type="button">
+                                        <span class="step-indicator">3</span> Products
+                                    </button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link {{ !isset($listing) ? 'disabled' : '' }}" id="extra-tab"
+                                        data-bs-toggle="tab" data-bs-target="#extra" type="button">
+                                        <span class="step-indicator">4</span> Extra Info
+                                    </button>
+                                </li>
+                            </ul>
+
+                            <!-- Tab Content -->
+                            <div class="tab-content" id="listingTabsContent">
+                                <!-- Tab 1: Basic Info -->
+                              @include('frontend.business_owner.business.partials.general_tab')
+
+                                <!-- Tab 2: Business Gallery -->
+                                @include('frontend.business_owner.business.partials.photos_tab')
+
+                                <!-- Tab 3: products -->
+                                @include('frontend.business_owner.business.partials.products_tab')
+
+                                <!-- Tab 4: Extra infos -->
+                                @include('frontend.business_owner.business.partials.extra_tab')
+                            </div> <!-- Close tab-content -->
+                        </div> <!-- Close dashboard-list-wraps-body -->
+                    </div> <!-- Close dashboard-list-wraps -->
+                </div> <!-- Close submit-form -->
+            </div> <!-- Close col-xl-12 -->
+        </div> <!-- Close row -->
+    </div> <!-- Close dashboard-widg-bar -->
+</div> <!-- Close goodup-dashboard-content -->
+</div>
+@endsection
+
+@section('extra_script')
+<script src="{{asset('frontend/js/select2.min.js')}}"></script>
+<script src="{{asset('frontend/js/add_business_listing.js')}}"
+@endsection
