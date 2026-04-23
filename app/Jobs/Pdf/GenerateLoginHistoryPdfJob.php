@@ -21,21 +21,34 @@ class GenerateLoginHistoryPdfJob implements ShouldQueue
     protected $user;
     protected $filters;
 
-    public function __construct($user, $filters = [])
+    public function __construct($user, array $filters = [])
     {
-        $this->user = $user;
-        $this->filters = $filters;
+        $this->user    = $user;
+        // Normalize and validate early in the constructor,
+        // so the stored filters are always safe
+        $this->filters = array_merge([
+            'search'      => null,
+            'date_from'   => null,
+            'date_to'     => null,
+            'device_type' => null,
+            'sort'        => 'login_time',
+            'direction'   => 'desc',
+        ], $filters);
+
+        // Whitelist sort & direction here so the stored payload is safe
+        if (!in_array($this->filters['sort'], ['login_time', 'ip_address', 'email', 'name'])) {
+            $this->filters['sort'] = 'login_time';
+        }
+
+        if (!in_array($this->filters['direction'], ['asc', 'desc'])) {
+            $this->filters['direction'] = 'desc';
+        }
     }
 
-
-    /**
-     * Execute the job.
-     */
     public function handle(): void
     {
         $query = LoginHistory::with('user');
 
-        // Search
         if (!empty($this->filters['search'])) {
             $search = $this->filters['search'];
             $query->where(function ($q) use ($search) {
@@ -46,8 +59,6 @@ class GenerateLoginHistoryPdfJob implements ShouldQueue
             });
         }
 
-
-        // Date Range
         if (!empty($this->filters['date_from'])) {
             $query->whereDate('login_time', '>=', $this->filters['date_from']);
         }
@@ -56,10 +67,8 @@ class GenerateLoginHistoryPdfJob implements ShouldQueue
             $query->whereDate('login_time', '<=', $this->filters['date_to']);
         }
 
-        // Device Type
         if (!empty($this->filters['device_type'])) {
             $deviceType = $this->filters['device_type'];
-
             $query->where(function ($q) use ($deviceType) {
                 switch ($deviceType) {
                     case 'mobile':
@@ -82,12 +91,6 @@ class GenerateLoginHistoryPdfJob implements ShouldQueue
             });
         }
 
-        // Sorting
-        $allowedSorts = ['login_time', 'ip_address', 'email', 'name'];
-        if (!in_array($this->filters['sort'], $allowedSorts)) {
-            $this->filters['sort'] = 'login_time';
-        }
-
         if (in_array($this->filters['sort'], ['email', 'name'])) {
             $query->join('users', 'login_histories.user_id', '=', 'users.id')
                 ->select('login_histories.*')
@@ -99,14 +102,13 @@ class GenerateLoginHistoryPdfJob implements ShouldQueue
         $logins = $query->get();
 
         $pdf = Pdf::loadView('backend.users.pdf_login_history', [
-            'logins' => $logins,
-            'filters' => Arr::only($this->filters, ['search', 'date_from', 'date_to', 'device_type']),
-            'generatedAt' => now(),
-            'totalRecords' => $logins->count()
+            'logins'       => $logins,
+            'filters'      => Arr::only($this->filters, ['search', 'date_from', 'date_to', 'device_type']),
+            'generatedAt'  => now(),
+            'totalRecords' => $logins->count(),
         ]);
         $pdf->setPaper('A4', 'portrait');
         $pdf->setOption('isHtml5ParserEnabled', true);
-
 
         $filename = 'login_history_' . now()->format('Y_m_d_His') . '.pdf';
         $filePath = 'pdfs/' . $filename;
@@ -114,12 +116,9 @@ class GenerateLoginHistoryPdfJob implements ShouldQueue
         Storage::disk('public')->put($filePath, $pdf->output());
 
         try {
-
-        Mail::to($this->user->email)->send(new PdfIsReadyMail($filePath));
-
+            Mail::to($this->user->email)->send(new PdfIsReadyMail($filePath));
         } catch (\Throwable $th) {
-
-            Log::info('Email for pdf is ready not sent' . $th->getMessage());
+            Log::error('PDF ready email failed to send: ' . $th->getMessage());
         }
     }
 }
