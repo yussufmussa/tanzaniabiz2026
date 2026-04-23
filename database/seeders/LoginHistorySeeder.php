@@ -14,13 +14,13 @@ class LoginHistorySeeder extends Seeder
     /**
      * Total records to seed.
      */
-    private const TOTAL_RECORDS = 1_000_000;
+    private const TOTAL_RECORDS = 1_000;
 
     /**
      * How many rows per DB insert (sweet spot: 500–1000).
      * Higher = fewer round-trips. Lower = less memory per batch.
      */
-    private const CHUNK_SIZE = 1_000;
+    private const CHUNK_SIZE = 100;
 
     /**
      * User agents pool — realistic distribution.

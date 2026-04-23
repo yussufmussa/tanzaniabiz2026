@@ -76,7 +76,7 @@
                                         <button wire:click="resetFilters" class="btn btn-outline-secondary btn-sm">
                                             <i class="fas fa-times"></i> Clear Filters
                                         </button>
-                                        <button wire:click="exportExcel" class="btn btn-outline-success btn-sm">
+                                        {{-- <button wire:click="exportExcel" class="btn btn-outline-success btn-sm">
                                             <i class="fas fa-download" wire:loding.remove wire:target="exportExcel"></i>
                                             Export Excel
                                             <i class="fas fa-spinner fa-spin" wire:loading
@@ -87,7 +87,17 @@
                                             <i class="fas fa-file-pdf" wire:loading.remove wire:target="exportPdf"></i>
                                             <i class="fas fa-spinner fa-spin" wire:loading wire:target="exportPdf"></i>
                                             Export PDF
-                                        </button>
+                                        </button> --}}
+
+                                        <a href="{{ route('login-history.export', ['format' => 'excel', 'search' => $search, 'date_from' => $device_type, 'device_type' => $device_type]) }}"
+                                            class="btn btn-success btn-sm me-1">
+                                            <i class="mdi mdi-file-excel"></i> Excel
+                                        </a>
+                                        <a href="{{ route('login-history.export', ['format' => 'pdf', 'search' => $search, 'date_to' => $device_type, 'device_type' => $device_type]) }}"
+                                            class="btn btn-danger btn-sm">
+                                            <i class="mdi mdi-file-pdf"></i> PDF
+                                        </a>
+
                                     </div>
                                 </div>
                             </div>
@@ -296,13 +306,13 @@
         </div>
     </div>
 
-<script>
-    setTimeout(function() {
-        var alerts = document.querySelectorAll('.alert');
-        alerts.forEach(function(alert) {
-            var bsAlert = new bootstrap.Alert(alert);
-            bsAlert.close();
-        });
-    }, 5000);
-</script>
+    <script>
+        setTimeout(function() {
+            var alerts = document.querySelectorAll('.alert');
+            alerts.forEach(function(alert) {
+                var bsAlert = new bootstrap.Alert(alert);
+                bsAlert.close();
+            });
+        }, 5000);
+    </script>
 </div>

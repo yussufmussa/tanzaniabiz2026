@@ -16,7 +16,7 @@ use PhpOffice\PhpSpreadsheet\Style\Border;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class ExportLoginHistory implements
+class LoginHistoryExport implements
     FromQuery,
     WithHeadings,
     WithMapping,
