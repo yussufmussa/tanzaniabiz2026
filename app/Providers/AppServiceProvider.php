@@ -55,11 +55,14 @@ class AppServiceProvider extends ServiceProvider
             Config::set('captcha.secret', GoogleRecaptcha::get('nocaptcha_secret', config('captcha.secret')));
         }
 
+        if(Schema::hasTable('social_login_settings')){
+
         Config::set('services.facebook.client_id', SocialLoginSetting::get('facebook', 'client_id', config('services.facebook.client_id')));
         Config::set('services.facebook.client_secret', SocialLoginSetting::get('facebook', 'client_secret', config('services.facebook.client_secret')));
 
         Config::set('services.google.client_id', SocialLoginSetting::get('google', 'client_id', config('services.google.client_id')));
         Config::set('services.google.client_secret', SocialLoginSetting::get('google', 'client_secret', config('services.google.client_secret')));
+        }
     }
 
     private function loadMailSettingsFromDatabase()
